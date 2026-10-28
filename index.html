@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Chen | 有溫度的軟體產品經理</title>
+    <style>
+        /* =========================================
+           1. 溫馨優雅的全域設定 (Warm & Elegant)
+           ========================================= */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;700&display=swap');
+
+        :root {
+            --bg-color: #FCFAF8;        
+            --bg-secondary: #F5F0E6;    
+            --text-primary: #36302B;    
+            --text-muted: #7A7068;      
+            --accent-color: #D97757;    
+            --accent-light: #FDEAE4;    
+            --border-color: #EAE3D9;
+            
+            --font-serif: 'Noto Serif TC', 'Playfair Display', serif;
+            --font-sans: 'Noto Sans TC', sans-serif;
+            --max-width: 1000px; 
+            --radius: 16px;             
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            background-color: var(--bg-color);
+            line-height: 1.7;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 700; letter-spacing: 0.02em; }
+        a { text-decoration: none; color: inherit; transition: 0.3s ease; }
+        img { max-width: 100%; display: block; }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* =========================================
+           2. 導航列 
+           ========================================= */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: rgba(252, 250, 248, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; color: var(--accent-color); font-style: italic; }
+        .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+        .nav-links a { font-size: 0.95rem; font-weight: 500; color: var(--text-muted); }
+        .nav-links a:hover { color: var(--accent-color); }
+        .btn-nav { background: var(--text-primary); color: var(--bg-color) !important; padding: 8px 20px; border-radius: 50px; font-weight: 500; font-size: 0.9rem;}
+        .btn-nav:hover { background: var(--accent-color); }
+
+        /* =========================================
+           3. 首頁英雄區塊 
+           ========================================= */
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            padding: 80px 0 100px;
+            position: relative;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50px; right: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(217, 119, 87, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .hero-img-wrapper { position: relative; flex-shrink: 0; z-index: 1; }
+        .hero-img {
+            width: 260px; height: 260px;
+            border-radius: 60% 40% 50% 50% / 50% 50% 60% 40%; 
+            object-fit: cover;
+            border: 6px solid var(--bg-color);
+            box-shadow: 0 15px 30px rgba(217, 119, 87, 0.15);
+        }
+        .hero-img-decor {
+            position: absolute; top: -12px; left: -12px;
+            width: 100%; height: 100%;
+            border: 2px dashed var(--accent-color);
+            border-radius: inherit; opacity: 0.4; z-index: -1;
+        }
+        .hero-text { position: relative; z-index: 1; }
+        .greeting {
+            display: inline-block; background: var(--accent-light); color: var(--accent-color);
+            padding: 6px 16px; border-radius: 50px; font-size: 0.85rem; font-weight: 500; margin-bottom: 20px;
+        }
+        .hero-text h1 { font-size: 2.4rem; line-height: 1.3; margin-bottom: 20px; }
+        .hero-text h1 .highlight { color: var(--accent-color); font-style: italic; }
+        .hero-text p { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 24px; max-width: 500px; line-height: 1.8; }
+        
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        .meta-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--accent-color); color: white;
+            padding: 14px 28px; border-radius: 50px; font-weight: 500;
+            box-shadow: 0 8px 20px rgba(217, 119, 87, 0.2);
+            font-size: 0.95rem;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(217, 119, 87, 0.3); }
+
+        /* =========================================
+           4. 工作經歷 
+           ========================================= */
+        .section { padding: 80px 0; }
+        .section-bg { background: var(--bg-secondary); }
+        
+        .section-title {
+            font-size: 1.6rem;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-title::after {
+            content: ''; flex: 1; height: 1px; background: var(--border-color); margin-left: 16px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+            max-width: 800px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 5px; top: 8px; bottom: 10px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-color), var(--border-color));
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 36px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -31px; top: 6px;
+            width: 12px; height: 12px;
+            background: var(--bg-color);
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+        .timeline-date {
+            font-size: 0.8rem; font-weight: 700; color: var(--accent-color);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
+        }
+        .timeline-item h3 { font-size: 1.15rem; margin-bottom: 4px; }
+        .timeline-item h4 { font-size: 0.95rem; color: var(--text-muted); font-weight: 400; margin-bottom: 8px; font-family: var(--font-sans); }
+        .timeline-item p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+        .timeline-item ul { margin-top: 8px; padding-left: 18px; color: var(--text-muted); font-size: 0.9rem; }
+        .timeline-item li { margin-bottom: 4px; }
+
+        /* =========================================
+           5. 核心技能 
+           ========================================= */
+        .skills-wrapper {
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: 24px 40px;
+        }
+        .skill-item { margin-bottom: 0; }
+        .skill-header {
+            display: flex; justify-content: space-between; margin-bottom: 8px;
+            font-weight: 500; font-size: 0.9rem;
+        }
+        .skill-bar {
+            height: 6px; background: rgba(255, 255, 255, 0.8); border-radius: 10px; overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #E89A7E);
+            border-radius: 10px;
+        }
+
+        /* =========================================
+           6. 精選作品 (依產品生命週期排序)
+           ========================================= */
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px; }
+        .project-card {
+            background: white; border: 1px solid var(--border-color); border-radius: var(--radius);
+            overflow: hidden; transition: all 0.3s ease;
+            display: flex; flex-direction: column;
+        }
+        .project-card:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(217, 119, 87, 0.1); border-color: var(--accent-color); }
+        
+        /* 作品預覽縮圖區 (請替換為真實截圖) */
+        .project-preview {
+            height: 180px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        .project-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .preview-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .preview-placeholder .icon { font-size: 2.5rem; margin-bottom: 8px; display: block; }
+        .preview-placeholder .text { font-size: 0.8rem; font-weight: 500; }
+
+        .project-content { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+        .project-tag { font-size: 0.7rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; display: block;}
+        .project-content h3 { font-size: 1.15rem; margin-bottom: 10px; line-height: 1.4; }
+        .project-content p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; flex: 1; }
+        
+        .project-metric {
+            background: rgba(129, 178, 154, 0.15); color: #52826B;
+            padding: 8px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 500;
+            margin-bottom: 16px; display: flex; align-items: flex-start; gap: 6px; line-height: 1.4;
+        }
+        
+        /* 查看完整產出按鈕 */
+        .btn-view-project {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: var(--bg-secondary);
+            color: var(--accent-color);
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+        .btn-view-project:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* =========================================
+           7. 專業證書 & 聯絡方式
+           ========================================= */
+        .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .cert-card {
+            background: white; padding: 20px; border-radius: var(--radius);
+            border: 1px solid var(--border-color); display: flex; align-items: center; gap: 16px; transition: 0.3s;
+        }
+        .cert-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.03); }
+        .cert-icon {
+            font-size: 1.5rem; width: 44px; height: 44px; background: var(--accent-light);
+            display: flex; align-items: center; justify-content: center; border-radius: 12px; flex-shrink: 0;
+        }
+        .cert-info h4 { font-size: 0.95rem; margin-bottom: 2px; font-family: var(--font-sans); font-weight: 700;}
+        .cert-info p { font-size: 0.8rem; color: var(--text-muted); }
+
+        .contact-section {
+            padding: 80px 0; text-align: center;
+            background: var(--text-primary); color: white; position: relative; overflow: hidden;
+        }
+        .contact-section::before {
+            content: ''; position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%);
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(217, 119, 87, 0.15) 0%, transparent 70%); border-radius: 50%;
+        }
+        .contact-section h2 { font-size: 2rem; margin-bottom: 12px; position: relative; font-style: italic; }
+        .contact-section p { color: rgba(255, 255, 255, 0.7); margin-bottom: 32px; font-size: 1rem; position: relative; }
+        .btn-white {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: white; color: var(--text-primary);
+            padding: 14px 32px; border-radius: 50px; font-weight: 600; position: relative; font-size: 0.95rem;
+        }
+        .btn-white:hover { background: var(--accent-color); color: white; transform: translateY(-2px); }
+
+        footer {
+            padding: 24px 0; text-align: center; font-size: 0.8rem;
+            color: var(--text-muted); border-top: 1px solid var(--border-color); background: var(--bg-color);
+        }
+
+        /* =========================================
+           8. RWD 響應式
+           ========================================= */
+        @media (max-width: 768px) {
+            .hero { flex-direction: column; text-align: center; gap: 40px; padding: 50px 0 60px; }
+            .hero-text p { margin: 0 auto 20px; }
+            .hero-meta { justify-content: center; }
+            .hero-img { width: 200px; height: 200px; }
+            .skills-wrapper { grid-template-columns: 1fr; } 
+            .nav-links { display: none; }
+            .hero-text h1 { font-size: 1.8rem; }
+            .section-title { font-size: 1.4rem; }
+            .timeline { padding-left: 24px; }
+            .timeline-item::before { left: -23px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 導航列 -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Alex Chen.</div>
+                <ul class="nav-links">
+                    <li><a href="#about">關於我</a></li>
+                    <li><a href="#experience">工作經歷</a></li>
+                    <li><a href="#skills">核心技能</a></li>
+                    <li><a href="#projects">精選作品</a></li>
+                    <li><a href="#contact" class="btn-nav">Get in Touch</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 首頁英雄區塊 -->
+    <section id="about" class="hero container">
+        <div class="hero-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Alex Chen" class="hero-img">
+            <div class="hero-img-decor"></div>
+        </div>
+        <div class="hero-text">
+            <span class="greeting">👋 Hello World</span>
+            <h1>你好，我是 Alex，<br>一位相信<span class="highlight">『好產品源於同理心』</span>的<br>軟體產品經理。</h1>
+            <p>擅長在複雜的商業邏輯與細膩的用戶情感之間，搭建溫暖的橋樑。熱衷於傾聽用戶聲音、賦能跨部門團隊，打造有溫度且具備商業價值的數位體驗。</p>
+            
+            <div class="hero-meta">
+                <span class="meta-tag">🎓 國立臺灣大學 資訊工程碩士</span>
+                <span class="meta-tag">🌸 專注 HCI 與使用者體驗</span>
+                <span class="meta-tag">☕ 8 年產品開發經驗</span>
+            </div>
+
+            <a href="#contact" class="btn-primary">一起喝杯咖啡聊聊 ☕</a>
+        </div>
+    </section>
+
+    <!-- 工作經歷 -->
+    <section id="experience" class="section section-bg">
+        <div class="container">
+            <h2 class="section-title">🌿 工作經歷 (Experience)</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2021 - PRESENT</div>
+                    <h3>資深軟體產品經理 — Tech Corp</h3>
+                    <h4>核心 SaaS 產品線 / 帶領 15 人跨職能團隊</h4>
+                    <p>作為團隊的溝通橋樑，傾聽用戶反饋並轉化為產品路線圖。以同理心驅動設計，協調工程、設計與行銷團隊。</p>
+                    <ul>
+                        <li>主導產品重構專案，透過深度用戶訪談，將核心功能的使用率提升 40%。</li>
+                        <li>建立團隊內部的「同理心地圖」工作坊，增進研發團隊對用戶痛點的共鳴。</li>
+                    </ul>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2018 - 2021</div>
+                    <h3>產品經理 / 前端開發 — Studio Design</h3>
+                    <h4>數位創新工作室 / 從 0 到 1 產品孵化</h4>
+                    <p>負責新創產品的早期驗證與開發。撰寫 PRD 並與工程師並肩作戰，營造開放、心理安全的團隊氛圍。</p>
+                    <ul>
+                        <li>成功交付 5+ 個企業級 Web App，平均按時交付率達 95%。</li>
+                        <li>導入敏捷開發流程，將團隊的迭代週期從 4 週縮短至 2 週。</li>
+                    </ul>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2016 - 2018</div>
+                    <h3>產品設計實習生 — Creative Lab</h3>
+                    <h4>使用者研究與介面設計</h4>
+                    <p>參與多個 B2C App 的使用者研究，負責整理訪談筆記與繪製 User Journey Map，培養對用戶行為的敏銳洞察力。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心技能 -->
+    <section id="skills" class="section">
+        <div class="container">
+            <h2 class="section-title">✨ 核心技能 (Skills)</h2>
+            <div class="skills-wrapper">
+                <div class="skill-item">
+                    <div class="skill-header"><span>同理心用戶洞察</span><span>95%</span></div>
+                    <div class="skill-bar"><div class="skill-progress" style="width: 95%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-header"><span>敏捷團隊賦能</span><span>90%</span></div>
+                    <div class="skill-bar"><div class="skill-progress" style="width: 90%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-header"><span>數據驅動策略</span><span>85%</span></div>
+                    <div class="skill-bar"><div class="skill-progress" style="width: 85%;"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-header"><span>跨部門溝通協調</span><span>92%</span></div>
+                    <div class="skill-bar"><div class="skill-progress" style="width: 92%;"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 精選作品 (依產品生命週期排序：發掘需求 -> 定義規格 -> 規劃時程 -> 創新提效) -->
+    <section id="projects" class="section section-bg">
+        <div class="container">
+            <h2 class="section-title">🌟 精選作品 (Projects)</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">點擊下方按鈕，將在新分頁開啟完整的互動式產出文件</p>
+            <div class="projects-grid">
+                
+                <!-- 作品 1: 發掘需求 (User Interview) -->
+                <div class="project-card">
+                    <div class="project-preview">
+                        <!-- 💡 提示：請將下方的 div 替換為您的真實截圖 <img src="user-interview-screenshot.png"> -->
+                        <div class="preview-placeholder">
+                            <span class="icon">🎙️</span>
+                            <span class="text">User Interview 訪談洞察預覽<br>(請替換為截圖)</span>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Step 1: 發掘需求 (User Research)</span>
+                        <h3>User Interview: 儀表板 V2.0 改版用研</h3>
+                        <p>包含訪談規劃、情境任務設置、用戶原話與痛點分析，以及具體的改版行動建議。展現深厚的同理心與用研閉環能力。</p>
+                        <div class="project-metric">🌱 解決 70% 用戶晨間匯報痛點，停留時間提升 25%</div>
+                        <a href="User Interview.html" target="_blank" rel="noopener noreferrer" class="btn-view-project"> 查看完整 User Interview</a>
+                    </div>
+                </div>
+
+                <!-- 作品 2: 定義規格 (PRD) -->
+                <div class="project-card">
+                    <div class="project-preview">
+                        <!-- 💡 提示：請將下方的 div 替換為您的真實截圖 <img src="prd-screenshot.png"> -->
+                        <div class="preview-placeholder">
+                            <span class="icon">📄</span>
+                            <span class="text">PRD 視覺化文件預覽<br>(請替換為截圖)</span>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Step 2: 定義規格 (PRD)</span>
+                        <h3>PRD: 智能數據儀表板 V2.0</h3>
+                        <p>包含 User Story、驗收標準 (AC) 與 Bug Triage 的完整視覺化文件。展現嚴謹的邏輯思維與跨團隊協作細節。</p>
+                        <div class="project-metric"> 降低認知負荷，客服諮詢量減少 30%</div>
+                        <a href="PRD.html" target="_blank" rel="noopener noreferrer" class="btn-view-project">🔍 查看完整 PRD 產出</a>
+                    </div>
+                </div>
+
+                <!-- 作品 3: 規劃時程 (Roadmap) -->
+                <div class="project-card">
+                    <div class="project-preview">
+                        <!-- 💡 提示：請將下方的 div 替換為您的真實截圖 <img src="roadmap-screenshot.png"> -->
+                        <div class="preview-placeholder">
+                            <span class="icon">🗓️</span>
+                            <span class="text">Roadmap 時程表預覽<br>(請替換為截圖)</span>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Step 3: 規劃時程 (Roadmap)</span>
+                        <h3>Roadmap: 產品時程與風險管理</h3>
+                        <p>跨部門協作的甘特圖與里程碑規劃。展現全局觀、資源整合能力與對專案風險的預判意識。</p>
+                        <div class="project-metric">🌱 預留 Buffer 確保 100% 按時交付</div>
+                        <a href="Roadmap.html" target="_blank" rel="noopener noreferrer" class="btn-view-project">🔍 查看完整 Roadmap</a>
+                    </div>
+                </div>
+
+                <!-- 作品 4: 創新提效 (AI Agent) -->
+                <div class="project-card">
+                    <div class="project-preview">
+                        <!--  提示：請將下方的 div 替換為您的真實截圖 <img src="ai-agent-screenshot.png"> -->
+                        <div class="preview-placeholder">
+                            <span class="icon">🤖</span>
+                            <span class="text">AI Agent 工作流與介面預覽<br>(請替換為截圖)</span>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <span class="project-tag">Step 4: 創新提效 (AI Automation)</span>
+                        <h3>AI Agent: 智能週報助手</h3>
+                        <p>從自動化工作流架構到 Chat UI 介面的完整解決方案。展現 AI 應用落地與提升團隊效率的前瞻思維。</p>
+                        <div class="project-metric">🌱 每週為團隊節省 10+ 小時行政時間</div>
+                        <a href="AI Agent & Prompt 介面.html" target="_blank" rel="noopener noreferrer" class="btn-view-project">🔍 查看完整 AI Agent</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 專業證書 -->
+    <section id="certificates" class="section">
+        <div class="container">
+            <h2 class="section-title">📜 專業證書 (Certificates)</h2>
+            <div class="cert-grid">
+                <div class="cert-card">
+                    <div class="cert-icon">☁️</div>
+                    <div class="cert-info"><h4>AWS Certified Developer</h4><p>Amazon Web Services • 2023</p></div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-icon">🎨</div>
+                    <div class="cert-info"><h4>Google UX Design Certificate</h4><p>Google • 2022</p></div>
+                </div>
+                <div class="cert-card">
+                    <div class="cert-icon">⚡</div>
+                    <div class="cert-info"><h4>Meta Front-End Developer</h4><p>Meta • 2021</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 聯絡方式 -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2>期待與您相遇</h2>
+            <p>如果您也相信好產品能為世界帶來一點溫暖，<br>歡迎隨時透過 Email 聯繫我，一起聊聊未來的可能性。</p>
+            <a href="mailto:hello@example.com" class="btn-white">發送 Email 給我 ✉️</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            © 2026 Alex Chen. Crafted with empathy & code. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+</html>

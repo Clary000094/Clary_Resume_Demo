@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Interview: 儀表板 V2.0 改版用研</title>
+    <style>
+        :root {
+            --bg-doc: #FCFAF8;
+            --text-primary: #36302B;
+            --text-muted: #7A7068;
+            --accent-color: #D97757;
+            --accent-light: #FDEAE4;
+            --border-color: #EAE3D9;
+            
+            --color-bg: #fdfbf9;
+            --color-tag-bg: #f1ede8;
+            
+            --font-sans: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: #f0ebe4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: var(--font-sans);
+            padding: 40px 20px;
+        }
+
+        .interview-mockup {
+            background: var(--bg-doc);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(54, 48, 43, 0.12);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4rem; font-weight: 900;
+            color: rgba(217, 119, 87, 0.04);
+            pointer-events: none; white-space: nowrap; z-index: 0;
+        }
+
+        .doc-content { padding: 40px; position: relative; z-index: 1; }
+
+        /* 標題區 */
+        .doc-header { margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px;}
+        .doc-title { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .doc-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap;}
+        
+        /* 受訪者 Persona 卡片 */
+        .persona-card {
+            background: var(--accent-light);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 250px;
+        }
+        .persona-avatar {
+            width: 48px; height: 48px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+            box-shadow: 0 4px 8px rgba(217, 119, 87, 0.1);
+        }
+        .persona-info h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+        .persona-info p { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0; }
+
+        /* 區塊標題 */
+        .section-title {
+            font-size: 0.9rem; font-weight: 700; color: var(--accent-color);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 20px; margin-top: 32px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .section-title:first-of-type { margin-top: 0; }
+
+        /* 網格佈局 */
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px;}
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        /* 通用卡片 */
+        .info-card {
+            background: var(--color-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .card-header {
+            font-size: 0.85rem; font-weight: 700; color: var(--text-primary);
+            margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+        }
+        
+        /* 任務與習慣列表 */
+        .task-list, .habit-list { list-style: none; padding: 0; }
+        .task-list li, .habit-list li {
+            font-size: 0.85rem; color: var(--text-primary); line-height: 1.6;
+            padding-left: 20px; position: relative; margin-bottom: 8px;
+        }
+        .task-list li::before {
+            content: '🎯'; position: absolute; left: 0; top: 0; font-size: 0.8rem;
+        }
+        .habit-list li::before {
+            content: ''; position: absolute; left: 0; top: 0; font-size: 0.8rem;
+        }
+
+        /* 用戶原話 (Quote) */
+        .quote-bubble {
+            background: white;
+            border-left: 4px solid var(--accent-color);
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-style: italic;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        .quote-bubble::before {
+            content: '“'; position: absolute; top: -10px; left: 10px;
+            font-size: 3rem; color: var(--accent-light); font-family: serif; line-height: 1;
+        }
+
+        /* 洞察標籤 */
+        .insight-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .tag {
+            font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+        }
+        .tag-pain { background: #FEE2E2; color: #991b1b; }
+        .tag-gain { background: #D1FAE5; color: #065F46; }
+        .tag-opp { background: #DBEAFE; color: #1E40AF; }
+
+        /* 底部 PM 行動建議 */
+        .pm-action {
+            margin-top: 32px;
+            background: var(--accent-light);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .action-icon {
+            font-size: 1.5rem; flex-shrink: 0;
+        }
+        .action-content h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+        .action-content p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin: 0; }
+
+        @media (max-width: 768px) {
+            .grid-3, .grid-2 { grid-template-columns: 1fr; }
+            .doc-content { padding: 24px; }
+            .doc-header { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="interview-mockup">
+        <div class="watermark">PORTFOLIO SAMPLE</div>
+
+        <div class="doc-content">
+            <!-- 頂部資訊 -->
+            <div class="doc-header">
+                <div>
+                    <h1 class="doc-title">🎙️ 用戶訪談大綱與洞察摘要</h1>
+                    <div class="doc-meta">
+                        <span>📁 專案：智能數據儀表板 V2.0 改版</span>
+                        <span>📅 訪談日期：2023-10-15</span>
+                        <span>⏱️ 時長：45 分鐘</span>
+                    </div>
+                </div>
+                
+                <!-- 受訪者 Persona -->
+                <div class="persona-card">
+                    <div class="persona-avatar">👩‍💼</div>
+                    <div class="persona-info">
+                        <h4>受訪者 P03 (行銷經理)</h4>
+                        <p>32歲 | 使用頻率：每日 | 技術熟練度：中等</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 1: 訪談前規劃 -->
+            <div class="section-title">📋 Part 1: 訪談規劃 (Interview Guide)</div>
+            <div class="grid-3">
+                <!-- 使用者背景 -->
+                <div class="info-card">
+                    <div class="card-header">👤 了解使用者背景</div>
+                    <ul class="task-list" style="list-style: none; padding: 0;">
+                        <li style="padding-left: 0;">• 目前的日常數據分析流程為何？</li>
+                        <li style="padding-left: 0;">• 最常查看的 3 個核心指標是什麼？</li>
+                        <li style="padding-left: 0;">• 過去使用舊版儀表板遇到最大的挫折？</li>
+                    </ul>
+                </div>
+
+                <!-- 情境任務 -->
+                <div class="info-card">
+                    <div class="card-header">🎯 設置觀察任務 (Tasks)</div>
+                    <ul class="task-list">
+                        <li>請嘗試找出「上個月的銷售數據」並匯出 PDF。</li>
+                        <li>請將「用戶留存率」卡片新增到首頁並置頂。</li>
+                        <li>當數據出現異常紅燈時，請演示您的處理流程。</li>
+                    </ul>
+                </div>
+
+                <!-- 操作習慣 -->
+                <div class="info-card">
+                    <div class="card-header"> 觀察操作習慣 (Habits)</div>
+                    <ul class="habit-list">
+                        <li>是否依賴瀏覽器書籤而非系統內導航？</li>
+                        <li>遇到加載延遲時，會頻繁刷新還是等待？</li>
+                        <li>是否會同時開啟多個分頁進行數據比對？</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Part 2: 訪談後洞察 -->
+            <div class="section-title">💡 Part 2: 核心洞察與機會 (Key Insights)</div>
+            
+            <div class="grid-2">
+                <!-- 用戶原話與痛點 -->
+                <div>
+                    <div class="quote-bubble">
+                        「我每天早上要花 15 分鐘把各個頁面的數據截圖，貼到 PowerPoint 裡給老闆看，儀表板根本沒辦法一鍵生成我需要的視圖。」
+                    </div>
+                    <div class="insight-tags">
+                        <span class="tag tag-pain">痛點：缺乏客製化視圖</span>
+                        <span class="tag tag-pain">痛點：匯出格式單一</span>
+                    </div>
+                </div>
+
+                <!-- 行為觀察與機會 -->
+                <div>
+                    <div class="info-card" style="height: 100%;">
+                        <div class="card-header">🔍 行為觀察與設計機會</div>
+                        <p style="font-size: 0.85rem; color: var(--text-primary); line-height: 1.6; margin-bottom: 12px;">
+                            觀察到 80% 的受訪者在比對數據時，會<strong>同時開啟兩個瀏覽器分頁</strong>。這顯示舊版的「多維度對比」功能隱藏太深。
+                        </p>
+                        <div class="insight-tags">
+                            <span class="tag tag-opp">機會：支援分屏對比模式</span>
+                            <span class="tag tag-gain">爽點：一鍵生成週報 PDF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PM 行動建議 -->
+            <div class="pm-action">
+                <div class="action-icon"></div>
+                <div class="action-content">
+                    <h4>PM 改版行動建議 (Next Steps)</h4>
+                    <p>基於本次訪談，V2.0 改版將優先實作 <strong>「自訂 Widget 儀表板」</strong> 與 <strong>「一鍵匯出多維度 PDF」</strong> 功能。預計可解決 70% 用戶的晨間匯報痛點，並將日均停留時間提升 25%。</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

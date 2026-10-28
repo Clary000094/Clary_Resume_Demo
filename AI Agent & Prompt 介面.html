@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent: 智能週報助手 (完整展示)</title>
+    <style>
+        :root {
+            --bg-doc: #FCFAF8;
+            --text-primary: #36302B;
+            --text-muted: #7A7068;
+            --accent-color: #D97757;
+            --accent-light: #FDEAE4;
+            --border-color: #EAE3D9;
+            
+            --color-input: #7A9E9F;    /* 霧藍灰：輸入/資料 */
+            --color-core: #D97757;     /* 赤陶珊瑚：核心處理 */
+            --color-output: #81B29A;   /* 鼠尾草綠：產出/通知 */
+            --color-trigger: #E8C39E;  /* 燕麥黃：觸發/排程 */
+            
+            --user-bubble: #F5F0E6;
+            --ai-bubble: #FFFFFF;
+            --font-sans: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: #f0ebe4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: var(--font-sans);
+            padding: 40px 20px;
+        }
+
+        .main-container {
+            background: var(--bg-doc);
+            width: 100%;
+            max-width: 850px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(54, 48, 43, 0.12);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 5rem; font-weight: 900;
+            color: rgba(217, 119, 87, 0.03);
+            pointer-events: none; white-space: nowrap; z-index: 0;
+        }
+
+        .doc-content { padding: 40px; position: relative; z-index: 1; }
+
+        /* 頁面大標題 */
+        .page-header { margin-bottom: 40px; text-align: center; }
+        .page-title { font-size: 1.6rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .page-subtitle { font-size: 0.95rem; color: var(--text-muted); }
+
+        /* =========================================
+           第一部分：垂直工作流架構 (Top-to-Bottom)
+           ========================================= */
+        .workflow-section { margin-bottom: 40px; }
+        
+        .stage-block {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 0;
+        }
+
+        .stage-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .stage-header.input { color: var(--color-input); }
+        .stage-header.core { color: var(--color-core); }
+        .stage-header.output { color: var(--color-output); }
+
+        /* 觸發卡片 (特殊) */
+        .trigger-card {
+            background: rgba(232, 195, 158, 0.15);
+            border: 1px dashed var(--color-trigger);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .trigger-card .card-title { justify-content: center; color: #92400E; margin-bottom: 4px; }
+        .trigger-card .card-desc { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* 網格佈局 (卡片排列) */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .wf-card {
+            border-radius: 12px;
+            padding: 16px;
+            transition: transform 0.2s;
+            border: 1px solid var(--border-color);
+            background: #fdfbf9;
+        }
+        .wf-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.04); }
+        
+        .wf-card.input-card { border-left: 4px solid var(--color-input); }
+        .wf-card.core-card { border-left: 4px solid var(--color-core); }
+        .wf-card.output-card { border-left: 4px solid var(--color-output); }
+
+        .card-title {
+            font-size: 0.9rem; font-weight: 700; color: var(--text-primary);
+            margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+        }
+        .card-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+        
+        .card-tag {
+            display: inline-block; font-size: 0.65rem; font-weight: 700;
+            padding: 2px 8px; border-radius: 10px;
+        }
+        .tag-input { background: rgba(122, 158, 159, 0.15); color: var(--color-input); }
+        .tag-core { background: var(--accent-light); color: var(--accent-color); }
+        .tag-output { background: rgba(129, 178, 154, 0.15); color: var(--color-output); }
+
+        /* 向下箭頭 */
+        .vertical-arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            color: var(--border-color);
+            font-size: 1.5rem;
+            position: relative;
+        }
+        .vertical-arrow::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 2px;
+            background: repeating-linear-gradient(to bottom, var(--border-color) 0, var(--border-color) 6px, transparent 6px, transparent 12px);
+            z-index: 0;
+        }
+        .vertical-arrow span {
+            background: var(--bg-doc);
+            padding: 0 10px;
+            z-index: 1;
+            color: var(--accent-color);
+        }
+
+        /* PM 洞察區塊 */
+        .pm-insight {
+            margin-top: 32px;
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent-color);
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .pm-insight strong { color: var(--accent-color); }
+
+        /* =========================================
+           第二部分：AI Agent 對話介面 (Chat UI)
+           ========================================= */
+        .chat-section { margin-top: 20px; }
+        .chat-section-title {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .agent-mockup {
+            background: var(--bg-doc);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 500px; /* 固定高度 */
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+        }
+
+        /* 頂部導航 */
+        .agent-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(252, 250, 248, 0.9);
+            backdrop-filter: blur(10px);
+        }
+        .agent-title {
+            font-size: 0.9rem; font-weight: 700; color: var(--text-primary);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .agent-title .dot {
+            width: 8px; height: 8px; background: #81B29A; border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(129, 178, 154, 0.2);
+        }
+        .data-sources { display: flex; gap: 6px; }
+        .source-tag {
+            font-size: 0.65rem; font-weight: 600; color: var(--text-muted);
+            background: var(--user-bubble); padding: 3px 8px; border-radius: 10px;
+        }
+
+        /* 聊天內容區 */
+        .chat-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: var(--bg-doc);
+        }
+
+        .message { display: flex; gap: 12px; max-width: 90%; }
+        .message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .message.ai { align-self: flex-start; }
+
+        .avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0;
+        }
+        .user .avatar { background: var(--accent-color); color: white; }
+        .ai .avatar { background: var(--accent-light); border: 1px solid var(--border-color); }
+
+        .bubble {
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .user .bubble {
+            background: var(--user-bubble); color: var(--text-primary);
+            border-bottom-right-radius: 4px;
+        }
+        .ai .bubble {
+            background: var(--ai-bubble); color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+        }
+
+        /* AI 報告樣式 */
+        .ai-report h4 {
+            font-size: 0.85rem; font-weight: 700; color: var(--accent-color);
+            margin: 10px 0 4px 0; display: flex; align-items: center; gap: 6px;
+        }
+        .ai-report h4:first-child { margin-top: 0; }
+        .ai-report ul { padding-left: 18px; margin-bottom: 6px; }
+        .ai-report li { margin-bottom: 2px; }
+        .ai-report .highlight { color: var(--accent-color); font-weight: 600; }
+        .ai-report .tag {
+            display: inline-block; font-size: 0.65rem; font-weight: 700;
+            padding: 1px 6px; border-radius: 4px; margin-right: 6px;
+        }
+        .tag.done { background: rgba(129, 178, 154, 0.2); color: #52826B; }
+        .tag.risk { background: #FDEAE4; color: var(--accent-color); }
+
+        /* 底部輸入框 */
+        .input-area {
+            padding: 12px 20px;
+            border-top: 1px solid var(--border-color);
+            background: white;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .input-box {
+            flex: 1;
+            background: var(--user-bubble);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .send-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--accent-color); color: white;
+            display: flex; align-items: center; justify-content: center;
+            border: none; cursor: pointer;
+        }
+
+        /* 滾動條美化 */
+        .chat-container::-webkit-scrollbar { width: 4px; }
+        .chat-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+        @media (max-width: 600px) {
+            .doc-content { padding: 24px; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .agent-mockup { height: 450px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="watermark">PORTFOLIO SAMPLE</div>
+
+        <div class="doc-content">
+            <!-- 頁面大標題 -->
+            <div class="page-header">
+                <h1 class="page-title">🤖 智能週報 Agent - 產品設計與實作</h1>
+                <p class="page-subtitle">從自動化工作流架構到最終使用者介面的完整解決方案</p>
+            </div>
+
+            <!-- 第一部分：垂直工作流架構 -->
+            <div class="workflow-section">
+                
+                <!-- 階段 1：觸發與輸入 -->
+                <div class="stage-block">
+                    <div class="trigger-card">
+                        <div class="card-title">⏰ 定時排程 (Trigger)</div>
+                        <div class="card-desc">每週五 16:00 自動啟動，無需人工干預</div>
+                    </div>
+
+                    <div class="stage-header input">📥 資料來源 (Data Sources)</div>
+                    <div class="cards-grid">
+                        <div class="wf-card input-card">
+                            <div class="card-title">🎯 Jira / Linear</div>
+                            <div class="card-desc">抓取本週已完成、進行中的 Ticket 與 Story Points。</div>
+                            <span class="card-tag tag-input">API 串接</span>
+                        </div>
+                        <div class="wf-card input-card">
+                            <div class="card-title">📝 Notion / Confluence</div>
+                            <div class="card-desc">提取本週產品會議記錄與決策結論。</div>
+                            <span class="card-tag tag-input">API 串接</span>
+                        </div>
+                        <div class="wf-card input-card">
+                            <div class="card-title"> Slack / Teams</div>
+                            <div class="card-desc">分析 #product-team 頻道的關鍵討論與阻礙回報。</div>
+                            <span class="card-tag tag-input">Webhook</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 向下箭頭 -->
+                <div class="vertical-arrow"><span>▼</span></div>
+
+                <!-- 階段 2：核心處理 -->
+                <div class="stage-block">
+                    <div class="stage-header core">🧠 Agent 核心處理 (Processing)</div>
+                    <div class="cards-grid">
+                        <div class="wf-card core-card">
+                            <div class="card-title">🔍 歷史報告分析</div>
+                            <div class="card-desc">分析團隊過去 3 個月的優秀週報，學習並鎖定標準格式與語氣。</div>
+                            <span class="card-tag tag-core">Few-shot Prompting</span>
+                        </div>
+                        <div class="wf-card core-card">
+                            <div class="card-title">📋 定義標準欄位</div>
+                            <div class="card-desc">強制 LLM 輸出結構化 JSON，包含：核心進度、潛在風險、下週計畫。</div>
+                            <span class="card-tag tag-core">Structured Output</span>
+                        </div>
+                        <div class="wf-card core-card">
+                            <div class="card-title">✨ 資料清洗與生成</div>
+                            <div class="card-desc">過濾無效資訊，將雜亂數據轉化為精簡、具備洞察力的條列式報告。</div>
+                            <span class="card-tag tag-core">GPT-4 / Claude</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 向下箭頭 -->
+                <div class="vertical-arrow"><span>▼</span></div>
+
+                <!-- 階段 3：產出與通知 -->
+                <div class="stage-block">
+                    <div class="stage-header output">📤 產出與通知 (Outputs)</div>
+                    <div class="cards-grid">
+                        <div class="wf-card output-card">
+                            <div class="card-title">📧 自動寄信通知</div>
+                            <div class="card-desc">將報告轉化為 HTML 格式，自動寄送至 PMO 與相關 Stakeholders。</div>
+                            <span class="card-tag tag-output">SendGrid / SMTP</span>
+                        </div>
+                        <div class="wf-card output-card">
+                            <div class="card-title">💬 Slack 頻道推播</div>
+                            <div class="card-desc">將核心摘要與風險警示發送至 #weekly-report 頻道，並 @mention 負責人。</div>
+                            <span class="card-tag tag-output">Slack Bot</span>
+                        </div>
+                        <div class="wf-card output-card">
+                            <div class="card-title">📄 存檔至 Notion</div>
+                            <div class="card-desc">自動建立一筆新的 Notion Page，作為團隊歷史知識庫的永久紀錄。</div>
+                            <span class="card-tag tag-output">Notion API</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PM 洞察 -->
+                <div class="pm-insight">
+                    <strong>💡 PM 規劃洞察：</strong> 
+                    此 Agent 不僅是「自動寫字」，更透過 <strong>分析歷史報告 (Few-shot)</strong> 確保輸出符合團隊文化，並透過 <strong>結構化輸出 (Structured Output)</strong> 確保風險不會被遺漏。每週為團隊節省 <strong>10+ 小時</strong> 的行政時間，讓 PM 能專注於高價值的產品決策。
+                </div>
+            </div>
+
+            <!-- 第二部分：AI Agent 對話介面 -->
+            <div class="chat-section">
+                <div class="chat-section-title">💬 實際操作介面 (Live Interface)</div>
+                
+                <div class="agent-mockup">
+                    <!-- 頂部導航 -->
+                    <div class="agent-header">
+                        <div class="agent-title">
+                            <div class="dot"></div>
+                            智能週報助手 (Weekly Report Agent)
+                        </div>
+                        <div class="data-sources">
+                            <span class="source-tag"> Jira</span>
+                            <span class="source-tag">📝 Notion</span>
+                            <span class="source-tag">💬 Slack</span>
+                        </div>
+                    </div>
+
+                    <!-- 聊天內容區 -->
+                    <div class="chat-container">
+                        <!-- 用戶指令 -->
+                        <div class="message user">
+                            <div class="avatar">👤</div>
+                            <div class="bubble">
+                                請根據本週 Jira 的 Sprint 進度與 Notion 會議記錄，生成一份產品團隊的週報，並標註潛在風險。
+                            </div>
+                        </div>
+
+                        <!-- AI 回覆 -->
+                        <div class="message ai">
+                            <div class="avatar">🤖</div>
+                            <div class="bubble ai-report">
+                                <p>好的，已整合 <strong>Jira</strong> (12 個任務) 與 <strong>Notion</strong> (3 場會議) 的數據。以下是本週產品團隊週報：</p>
+                                
+                                <h4> 本週核心進度 (Key Progress)</h4>
+                                <ul>
+                                    <li><span class="tag done">完成</span> 儀表板 V2.0 的 UI 高保真原型設計，已通過內部評審。</li>
+                                    <li><span class="tag done">完成</span> 後端 API 串接，數據渲染延遲從 2s 降至 <span class="highlight">400ms</span>。</li>
+                                </ul>
+
+                                <h4>️ 潛在風險與阻礙 (Risks & Blockers)</h4>
+                                <ul>
+                                    <li><span class="tag risk">風險</span> 第三方金流串接文件過時，可能導致下週 UAT 測試延遲 2 天。已安排與供應商開會確認。</li>
+                                </ul>
+
+                                <h4>📅 下週計畫 (Next Steps)</h4>
+                                <ul>
+                                    <li>啟動儀表板 V2.0 前端開發 (預計 5 個 Story Points)。</li>
+                                    <li>完成金流串接的 Sandbox 環境測試。</li>
+                                </ul>
+                                
+                                <p style="margin-top: 12px; font-size: 0.8rem; color: var(--text-muted);">
+                                     <em>Agent 建議：建議將金流風險提前同步給行銷團隊，以便調整上線宣傳時程。</em>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 底部輸入框 -->
+                    <div class="input-area">
+                        <div class="input-box">輸入指令，例如：「將這份週報發送到 #product-team Slack 頻道」...</div>
+                        <button class="send-btn">➤</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

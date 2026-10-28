@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRD: 智能數據儀表板 V2.0</title>
+    <style>
+        :root {
+            --bg-doc: #FCFAF8;
+            --text-primary: #36302B;
+            --text-muted: #7A7068;
+            --accent-color: #D97757;
+            --accent-light: #FDEAE4;
+            --border-color: #EAE3D9;
+            --font-sans: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: #f0ebe4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: var(--font-sans);
+            padding: 40px 20px;
+        }
+
+        .prd-mockup {
+            background: var(--bg-doc);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(54, 48, 43, 0.12);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(217, 119, 87, 0.04);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 0;
+        }
+
+        .doc-content {
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 標題區 */
+        .doc-header {
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent-light);
+        }
+        .doc-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .doc-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            align-items: center;
+        }
+        .status-badge {
+            background: rgba(129, 178, 154, 0.2);
+            color: #52826B;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #52826B;
+            border-radius: 50%;
+        }
+
+        /* 章節通用 */
+        .section { margin-bottom: 32px; }
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title .icon { font-size: 1.1rem; }
+        .section-text {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+            margin: 0;
+        }
+        .section-text strong { color: var(--accent-color); font-weight: 600; }
+
+        /* User Story */
+        .user-story {
+            background: white;
+            border-left: 4px solid var(--accent-color);
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+        .user-story strong { color: var(--accent-color); font-weight: 600; }
+
+        /* 雙欄視覺區 */
+        .visual-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        .visual-box {
+            background: #fdfbf9;
+            border: 2px dashed var(--accent-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .visual-box-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .wireframe-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            grid-template-rows: 40px 1fr;
+            gap: 10px;
+            height: 180px;
+        }
+        .wf-block { background: var(--accent-light); border-radius: 6px; border: 1px solid rgba(217, 119, 87, 0.2); }
+        .wf-header { grid-column: 1 / 3; background: #eae3d9; }
+        .wf-sidebar { background: rgba(217, 119, 87, 0.15); }
+        .wf-main { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; }
+        .wf-card { background: white; border: 1px solid var(--border-color); border-radius: 4px; }
+        
+        .flowchart { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; height: 180px; }
+        .flow-node {
+            width: 60px; height: 60px; border-radius: 50%; background: var(--accent-light);
+            border: 2.5px solid var(--accent-color); display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700; color: var(--accent-color); text-align: center; line-height: 1.2;
+        }
+        .flow-arrow { color: var(--accent-color); font-size: 1.5rem; font-weight: 300; }
+
+        /* 驗收標準 (純文字版) */
+        .ac-list { list-style: none; padding: 0; margin: 0; }
+        .ac-item {
+            background: white;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .ac-icon {
+            flex-shrink: 0;
+            width: 40px; height: 40px;
+            background: rgba(129, 178, 154, 0.15);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+        .ac-content { flex: 1; }
+        .ac-text { font-size: 0.9rem; color: var(--text-primary); line-height: 1.6; margin: 0; }
+        .ac-text strong { color: var(--accent-color); font-weight: 600; }
+        .ac-text em { font-style: normal; background: var(--accent-light); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; }
+
+        /* Bug List 視覺化樣式 */
+        .bug-list-visual { display: flex; flex-direction: column; gap: 12px; }
+        .bug-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+        .bug-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        
+        .bug-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .bug-id {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            font-family: monospace;
+            letter-spacing: 0.05em;
+        }
+        .bug-priority {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .bug-priority.p0 { background: #fee2e2; color: #991b1b; } /* 紅色：嚴重 */
+        .bug-priority.p2 { background: #e0f2fe; color: #075985; } /* 藍色：一般 */
+
+        .bug-status {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+        .bug-status.fixed { background: rgba(129, 178, 154, 0.2); color: #52826B; }
+        .bug-status.open { background: #f1f5f9; color: #64748b; }
+
+        .bug-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 10px 0;
+            line-height: 1.4;
+        }
+        .bug-steps {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            background: #fdfbf9;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        .bug-steps strong { color: var(--text-primary); }
+        .bug-steps ol { margin: 4px 0 0 16px; padding: 0; }
+        .bug-steps li { margin-bottom: 2px; }
+
+        @media (max-width: 600px) {
+            .visual-grid { grid-template-columns: 1fr; }
+            .doc-content { padding: 24px; }
+            .doc-title { font-size: 1.3rem; }
+        }
+        /* Bug 環境資訊標籤 */
+        .bug-environment {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .env-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: #fdfbf9;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        .env-tag strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        /* Bug 附件與媒體連結 */
+        .bug-attachments {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-color);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .attachment-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            background: var(--accent-light);
+            padding: 5px 12px;
+            border-radius: 20px; /* 膠囊形狀 */
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .attachment-link:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(217, 119, 87, 0.2);
+        }
+        .attachment-link .icon {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="prd-mockup">
+        <div class="watermark">PORTFOLIO SAMPLE</div>
+
+        <div class="doc-content">
+            <!-- 標題區 -->
+            <div class="doc-header">
+                <h1 class="doc-title">📄 PRD: 智能數據儀表板 V2.0</h1>
+                <div class="doc-meta">
+                    <span>👤 PM: Alex Chen</span>
+                    <span>📅 2023-10-28</span>
+                    <span class="status-badge">開發中</span>
+                </div>
+            </div>
+
+            <!-- 1. 背景與商業目標 -->
+            <div class="section">
+                <div class="section-title"><span class="icon"></span> 1. 背景與商業目標</div>
+                <p class="section-text">
+                    舊版儀表板資訊過載，導致新用戶首週流失率高達 35%。本次重構旨在<strong>降低認知負荷</strong>，透過個人化 Widget 設計，目標將用戶日均停留時間提升 25%，並減少 30% 的客服諮詢量。
+                </p>
+            </div>
+
+            <!-- 2. 核心使用者故事 -->
+            <div class="section">
+                <div class="section-title"><span class="icon"></span> 2. 核心使用者故事 (User Stories)</div>
+                <div class="user-story">
+                    作為 <strong>行銷經理</strong>，我想要 <strong>自訂首頁的數據卡片</strong>，以便於 <strong>每天早晨能快速掌握核心 KPI，無需滾動尋找</strong>。
+                </div>
+                <div class="user-story">
+                    作為 <strong>系統管理員</strong>，我想要 <strong>一鍵匯出當前視圖的 PDF 報告</strong>，以便於 <strong>在週會上向高層進行簡報</strong>。
+                </div>
+            </div>
+
+            <!-- 視覺化雙欄區 -->
+            <div class="visual-grid">
+                <div class="visual-box">
+                    <div class="visual-box-title">🎨 UI Wireframe (介面佈局)</div>
+                    <div class="wireframe-layout">
+                        <div class="wf-block wf-header"></div>
+                        <div class="wf-block wf-sidebar"></div>
+                        <div class="wf-main">
+                            <div class="wf-card"></div><div class="wf-card"></div>
+                            <div class="wf-card"></div><div class="wf-card"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="visual-box">
+                    <div class="visual-box-title">🔄 User Flow (核心流程)</div>
+                    <div class="flowchart">
+                        <div class="flow-node">登入</div><div class="flow-arrow">→</div>
+                        <div class="flow-node">自訂<br>Widget</div><div class="flow-arrow">→</div>
+                        <div class="flow-node">數據<br>渲染</div><div class="flow-arrow">→</div>
+                        <div class="flow-node">匯出<br>PDF</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 驗收標準 (恢復純文字 Given/When/Then) -->
+            <div class="section">
+                <div class="section-title"><span class="icon">✅</span> 3. 驗收標準 (Acceptance Criteria)</div>
+                <ul class="ac-list">
+                    <li class="ac-item">
+                        <div class="ac-icon">🖱️</div>
+                        <div class="ac-content">
+                            <p class="ac-text">
+                                <strong>Given</strong> 用戶處於儀表板首頁，<strong>When</strong> 點擊 <em>「新增 Widget」</em>，<strong>Then</strong> 應彈出包含 5 種預設數據模板的選擇面板。
+                            </p>
+                        </div>
+                    </li>
+                    <li class="ac-item">
+                        <div class="ac-icon">💾</div>
+                        <div class="ac-content">
+                            <p class="ac-text">
+                                <strong>Given</strong> 用戶拖曳調整卡片位置，<strong>When</strong> 離開頁面後再次登入，<strong>Then</strong> 系統應記憶並恢復其自訂佈局。
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 4. 缺陷清單 (Bug List & Triage) -->
+            <div class="section">
+                <div class="section-title"><span class="icon"></span> 4. 缺陷清單 (Bug List & Triage)</div>
+                <p class="section-text" style="margin-bottom: 16px;">
+                    在 QA 測試階段，PM 需協助定義 Bug 的<strong>優先級 (Priority)</strong> 與<strong>影響範圍</strong>，並提供清晰的<strong>重現步驟 (Steps to Reproduce)</strong>，以加速工程團隊修復。
+                </p>
+                
+                <div class="bug-list-visual">
+                    <!-- Bug 1: P0 嚴重 -->
+                    <div class="bug-card">
+                        <div class="bug-header">
+                            <span class="bug-id">BUG-104</span>
+                            <span class="bug-priority p0">P0 - 嚴重</span>
+                            <span class="bug-status fixed">已修復</span>
+                        </div>
+                        <h4 class="bug-title">點擊「新增 Widget」後，選擇面板未正常彈出</h4>
+                        <div class="bug-environment">
+                            <span class="env-tag">📱 <strong>裝置:</strong> Mobile (iOS 17 / Safari)</span>
+                            <span class="env-tag">🌐 <strong>頁面:</strong> /dashboard/widgets (儀表板首頁)</span>
+                        </div>    
+                        <div class="bug-steps">
+                            <strong>重現步驟：</strong>
+                            <ol>
+                                <li>登入系統並進入儀表板首頁。</li>
+                                <li>點擊右上角「+ 新增 Widget」按鈕。</li>
+                                <li>預期：彈出選擇面板。實際：無任何反應，Console 報 500 錯誤。</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Bug 2: P2 一般 -->
+                    <div class="bug-card">
+                        <div class="bug-header">
+                            <span class="bug-id">BUG-105</span>
+                            <span class="bug-priority p2">P2 - 一般</span>
+                            <span class="bug-status open">待處理</span>
+                        </div>
+                        <h4 class="bug-title">拖曳卡片至邊緣時，佈局預覽出現輕微偏移</h4>
+                        <div class="bug-steps">
+                            <strong>重現步驟：</strong>
+                            <ol>
+                                <li>在首頁拖曳「銷售數據」卡片至螢幕最右側邊緣。</li>
+                                <li>觀察虛線預覽框，發現向右偏移約 10px，不影響功能但影響美觀。</li>
+                            </ol>
+                        </div>
+                        <div class="bug-attachments">
+                            <a href="#" class="attachment-link">
+                                <span class="icon">🖼️</span> 查看錯誤截圖 (PNG)
+                            </a>
+                            <a href="#" class="attachment-link">
+                                <span class="icon">🎥</span> 觀看重現影片 (Loom)
+                            </a>
+                            <a href="#" class="attachment-link">
+                                <span class="icon">📄</span> 後端 Log 紀錄
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

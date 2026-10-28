@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap: 智能數據儀表板 V2.0</title>
+    <style>
+        :root {
+            --bg-doc: #FCFAF8;
+            --text-primary: #36302B;
+            --text-muted: #7A7068;
+            --accent-color: #D97757;
+            --accent-light: #FDEAE4;
+            --border-color: #EAE3D9;
+            
+            /* 任務分類配色 (柔和且具備區分度) */
+            --color-design: #D97757;   /* 赤陶珊瑚：設計 */
+            --color-dev: #7A9E9F;      /* 霧藍灰：工程研發 */
+            --color-qa: #E8C39E;       /* 燕麥黃：測試/QA */
+            --color-mkt: #81B29A;      /* 鼠尾草綠：行銷/上線 */
+            
+            --font-sans: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: #f0ebe4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: var(--font-sans);
+            padding: 40px 20px;
+        }
+
+        .prd-mockup {
+            background: var(--bg-doc);
+            width: 100%;
+            max-width: 850px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(54, 48, 43, 0.12);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4rem; font-weight: 900;
+            color: rgba(217, 119, 87, 0.04);
+            pointer-events: none; white-space: nowrap; z-index: 0;
+        }
+
+        .doc-content { padding: 40px; position: relative; z-index: 1; }
+
+        /* 標題區 */
+        .doc-header { margin-bottom: 32px; padding-bottom: 20px; border-bottom: 2px solid var(--accent-light); }
+        .doc-title { font-size: 1.6rem; font-weight: 700; color: var(--text-primary); margin: 0 0 12px 0; display: flex; align-items: center; gap: 10px; }
+        .doc-meta { display: flex; gap: 20px; font-size: 0.85rem; color: var(--text-muted); align-items: center; flex-wrap: wrap;}
+        .status-badge { background: rgba(129, 178, 154, 0.2); color: #52826B; padding: 4px 12px; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+        .status-badge::before { content: ''; width: 8px; height: 8px; background: #52826B; border-radius: 50%; }
+
+        /* 圖例 (Legend) */
+        .legend { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+        /* Roadmap 核心網格 (CSS Grid 模擬甘特圖) */
+        .roadmap-container {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            margin-bottom: 24px;
+        }
+        
+        .roadmap-grid {
+            display: grid;
+            /* 左側任務欄 + 4個月份/階段 */
+            grid-template-columns: 140px repeat(4, 1fr); 
+            background: var(--border-color); /* 網格線顏色 */
+            gap: 1px;
+        }
+
+        .grid-cell {
+            background: var(--bg-doc);
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .grid-header {
+            background: #fdfbf9;
+            font-weight: 700;
+            color: var(--text-muted);
+            justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.75rem;
+        }
+
+        .task-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            gap: 8px;
+        }
+
+        /* 甘特條 (Gantt Bar) */
+        .gantt-cell {
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .gantt-bar {
+            height: 32px;
+            border-radius: 16px; /* 膠囊狀 */
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .gantt-bar:hover { transform: scale(1.02); }
+        
+        /* 跨欄設定 (模擬時間跨度) */
+        .span-2 { grid-column: span 2; }
+        .span-3 { grid-column: span 3; }
+        .span-4 { grid-column: span 4; }
+
+        /* 顏色類別 */
+        .bg-design { background: var(--color-design); }
+        .bg-dev { background: var(--color-dev); }
+        .bg-qa { background: var(--color-qa); color: #7a5c2e; } /* 淺色背景配深色字 */
+        .bg-mkt { background: var(--color-mkt); }
+
+        /* 里程碑標記 (Milestone) */
+        .milestone-marker {
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px; height: 16px;
+            background: white;
+            border: 3px solid var(--text-primary);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        /* 目前進度線 (Current Progress) */
+        .current-line {
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 50%; /* 假設目前在 M2 結束 */
+            width: 2px;
+            background: repeating-linear-gradient(to bottom, var(--accent-color) 0, var(--accent-color) 6px, transparent 6px, transparent 12px);
+            z-index: 3;
+            pointer-events: none;
+        }
+        .current-label {
+            position: absolute;
+            top: -24px; left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-color);
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* 底部風險與依賴提示 */
+        .risk-note {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent-color);
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .risk-note strong { color: var(--accent-color); }
+
+        @media (max-width: 600px) {
+            .roadmap-grid { grid-template-columns: 100px repeat(4, 1fr); }
+            .grid-cell { padding: 8px; font-size: 0.7rem; }
+            .gantt-bar { font-size: 0.65rem; padding: 0 8px; }
+            .doc-content { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="prd-mockup">
+        <div class="watermark">PORTFOLIO SAMPLE</div>
+
+        <div class="doc-content">
+            <!-- 標題區 -->
+            <div class="doc-header">
+                <h1 class="doc-title">🗓️ Roadmap: 智能數據儀表板 V2.0</h1>
+                <div class="doc-meta">
+                    <span>👤 PM: Alex Chen</span>
+                    <span> 2023 Q4 (10月 - 1月)</span>
+                    <span class="status-badge">進行中 (M2)</span>
+                </div>
+            </div>
+
+            <!-- 圖例 -->
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot" style="background: var(--color-design);"></div> UI/UX 設計</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--color-dev);"></div> 工程研發</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--color-qa);"></div> QA 測試</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--color-mkt);"></div> 行銷與上線</div>
+            </div>
+
+            <!-- Roadmap 網格 -->
+            <div class="roadmap-container">
+                <div class="roadmap-grid">
+                    <!-- 表頭 -->
+                    <div class="grid-cell grid-header">任務 / 階段</div>
+                    <div class="grid-cell grid-header">M1 (10月)</div>
+                    <div class="grid-cell grid-header">M2 (11月)</div>
+                    <div class="grid-cell grid-header">M3 (12月)</div>
+                    <div class="grid-cell grid-header">M4 (1月)</div>
+
+                    <!-- 階段 1: 設計 -->
+                    <div class="grid-cell task-label"> 介面與體驗設計</div>
+                    <div class="gantt-cell span-2">
+                        <div class="gantt-bar bg-design">
+                            Wireframe & 高保真原型
+                            <div class="milestone-marker"></div>
+                        </div>
+                    </div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"></div>
+
+                    <!-- 階段 2: 研發 -->
+                    <div class="grid-cell task-label">⚙️ 前端與後端開發</div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell span-2">
+                        <div class="gantt-bar bg-dev">核心 API 與 Widget 開發</div>
+                    </div>
+                    <div class="gantt-cell">
+                        <div class="gantt-bar bg-dev" style="width: 50%;">PDF 匯出模組</div>
+                    </div>
+
+                    <!-- 階段 3: 測試 -->
+                    <div class="grid-cell task-label">🐞 QA 與 UAT 測試</div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell span-2">
+                        <div class="gantt-bar bg-qa">
+                            內部測試與 Bug 修復
+                            <div class="milestone-marker"></div>
+                        </div>
+                    </div>
+
+                    <!-- 階段 4: 上線 -->
+                    <div class="grid-cell task-label">🚀 行銷與正式上線</div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell"></div>
+                    <div class="gantt-cell">
+                        <div class="gantt-bar bg-mkt">
+                            GA 正式發布
+                            <div class="milestone-marker" style="border-color: var(--color-mkt);"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 目前進度指示線 (絕對定位覆蓋在網格上) -->
+                <div style="position: relative; height: 0;">
+                    <div class="current-line">
+                        <div class="current-label">📍 目前進度 (11月底)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 風險與依賴提示 (展現 PM 的高階思維) -->
+            <div class="risk-note">
+                <strong>⚠️ 關鍵依賴與風險提示 (Dependencies & Risks)：</strong><br>
+                1. <strong>PDF 匯出模組</strong> 依賴後端團隊的第三方套件授權，已預留 1 週 Buffer (緩衝期)。<br>
+                2. <strong>行銷素材</strong> 需等待 M3 的 UAT 測試通過後，由設計團隊提供最終截圖方可啟動。
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
