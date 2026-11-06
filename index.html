@@ -371,8 +371,11 @@
         .cert-card {
             background: white; padding: 20px; border-radius: var(--radius);
             border: 1px solid var(--border-color); display: flex; align-items: center; gap: 16px; transition: 0.3s;
+            min-height: 112px;
         }
-        .cert-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.03); }
+        .cert-card::after { content: '↗'; margin-left: auto; color: var(--accent-color); font-size: 1rem; flex-shrink: 0; }
+        .cert-card:hover { transform: translateY(-3px); border-color: rgba(217, 119, 87, 0.45); box-shadow: 0 8px 16px rgba(54, 48, 43, 0.06); }
+        .cert-card:focus-visible { outline: 3px solid rgba(217, 119, 87, 0.25); outline-offset: 3px; }
         .cert-icon {
             font-size: 1.5rem; width: 44px; height: 44px; background: var(--accent-light);
             display: flex; align-items: center; justify-content: center; border-radius: 12px; flex-shrink: 0;
@@ -560,18 +563,30 @@
         <div class="container">
             <h2 class="section-title">📜 專業證書 (Certificates)</h2>
             <div class="cert-grid">
-                <div class="cert-card">
-                    <div class="cert-icon">☁️</div>
-                    <div class="cert-info"><h4>AWS Certified Developer</h4><p>Amazon Web Services • 2023</p></div>
-                </div>
-                <div class="cert-card">
-                    <div class="cert-icon">🎨</div>
-                    <div class="cert-info"><h4>Google UX Design Certificate</h4><p>Google • 2022</p></div>
-                </div>
-                <div class="cert-card">
-                    <div class="cert-icon">⚡</div>
-                    <div class="cert-info"><h4>Meta Front-End Developer</h4><p>Meta • 2021</p></div>
-                </div>
+                <a class="cert-card" href="https://coursera.org/share/dd7eff3d940b3b27bc196669fe174423" target="_blank" rel="noopener noreferrer">
+                    <div class="cert-icon">📘</div>
+                    <div class="cert-info"><h4>Foundations of Project Management</h4><p>Google Career Certificates • Coursera</p></div>
+                </a>
+                <a class="cert-card" href="https://coursera.org/share/ef5978b31581a00a6e37e313bf7f77d6" target="_blank" rel="noopener noreferrer">
+                    <div class="cert-icon">🚀</div>
+                    <div class="cert-info"><h4>Project Initiation: Starting a Successful Project</h4><p>Google Career Certificates • Coursera</p></div>
+                </a>
+                <a class="cert-card" href="https://coursera.org/share/da25a1aa18f8b2e8c46eb8b68d09cabd" target="_blank" rel="noopener noreferrer">
+                    <div class="cert-icon">🗓️</div>
+                    <div class="cert-info"><h4>Project Planning: Putting It All Together</h4><p>Google Career Certificates • Coursera</p></div>
+                </a>
+                <a class="cert-card" href="https://coursera.org/share/c0362d2be0f7a6971a4cf66a23c19a16" target="_blank" rel="noopener noreferrer">
+                    <div class="cert-icon">▶️</div>
+                    <div class="cert-info"><h4>Project Execution: Running the Project</h4><p>Google Career Certificates • Coursera</p></div>
+                </a>
+                <a class="cert-card" href="https://coursera.org/share/a777de6a15acea84fa11ba6ef2b9da92" target="_blank" rel="noopener noreferrer">
+                    <div class="cert-icon">🔄</div>
+                    <div class="cert-info"><h4>Agile Project Management</h4><p>Google Career Certificates • Coursera</p></div>
+                </a>
+                <a class="cert-card" href="https://coursera.org/share/745ae938a6c781886d1cb9f03dd07f83" target="_blank" rel="noopener noreferrer">
+                    <div class="cert-icon">🏁</div>
+                    <div class="cert-info"><h4>Capstone: Applying Project Management in the Real World</h4><p>Google Career Certificates • Coursera</p></div>
+                </a>
             </div>
         </div>
     </section>
