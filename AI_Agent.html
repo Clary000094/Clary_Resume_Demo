@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Agent Template</title>
+    <title>智能週報 Agent</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;700&display=swap');
 
@@ -177,24 +177,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 40px;
-            color: var(--border-color);
-            font-size: 1.5rem;
-            position: relative;
-        }
-        .vertical-arrow::before {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0;
-            width: 2px;
-            background: repeating-linear-gradient(to bottom, var(--border-color) 0, var(--border-color) 6px, transparent 6px, transparent 12px);
-            z-index: 0;
+            height: 32px;
+            color: var(--accent-color);
+            font-size: 1.2rem;
         }
         .vertical-arrow span {
-            background: var(--bg-doc);
-            padding: 0 10px;
-            z-index: 1;
-            color: var(--accent-color);
+            display: block;
+            line-height: 1;
         }
 
         .flow-container {
@@ -657,7 +646,7 @@
                             <img src="images/report-before-1.jpg" alt="改造前的週報：純文字堆疊、格式不一致">
                             <span class="zoom-hint">🔍 2 張</span>
                         </div>
-                        <figcaption>未改造前：純文字堆疊、格式不一致，需人工編排 15+ 分鐘（點擊放大檢視 2 張）</figcaption>
+                        <figcaption>未改造前：純文字堆疊、格式不一致，需人工編排 30+ 分鐘（點擊放大檢視）</figcaption>
                     </figure>
 
                     <!-- AFTER：外層只顯示封面 1 張，共 4 張可預覽 -->
@@ -667,7 +656,7 @@
                             <img src="images/report-after-1.jpg" alt="Agent 生成的週報：結構化欄位、統一樣式">
                             <span class="zoom-hint">🔍 4 張</span>
                         </div>
-                        <figcaption>Agent 成品：結構化欄位、統一樣式與風險標註，42 秒自動產出（點擊放大檢視 4 張）</figcaption>
+                        <figcaption>Agent 成品：結構化欄位、統一樣式與風險標註，10 分鐘內自動產出（點擊放大檢視）</figcaption>
                     </figure>
                 </div>
             </div>
