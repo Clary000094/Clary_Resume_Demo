@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
-<head>
+<html lang="zh-TW"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alex Chen | 有溫度的軟體產品經理</title>
+    <title>Clary Sung | 有溫度的軟體產品經理</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;700&display=swap');
 
@@ -101,10 +100,6 @@
             border-radius: inherit; opacity: 0.4; z-index: -1;
         }
         .hero-text { position: relative; z-index: 1; }
-        .greeting {
-            display: inline-block; background: var(--accent-light); color: var(--accent-color);
-            padding: 6px 16px; border-radius: 50px; font-size: 0.85rem; font-weight: 500; margin-bottom: 20px;
-        }
         .hero-text h1 { font-size: 2.4rem; line-height: 1.3; margin-bottom: 20px; }
         .hero-text h1 .highlight { color: var(--highlight); font-style: italic; }
         .hero-text p { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 24px; max-width: 500px; line-height: 1.8; }
@@ -135,24 +130,12 @@
         .skill-pill {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.78);
-            border: 1px solid #DED3C8;
-            padding: 8px 14px;
-            border-radius: 10px;
+            background: var(--accent-light);
+            padding: 6px 16px;
+            border-radius: 50px;
             font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            box-shadow: 0 3px 8px rgba(54, 48, 43, 0.05);
-        }
-        .skill-pill::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            flex: 0 0 6px;
-            border-radius: 50%;
-            background: #C98B72;
-            box-shadow: 0 0 0 3px rgba(201, 139, 114, 0.14);
+            font-weight: 500;
+            color: var(--accent-color);
         }
 
         /* =========================================
@@ -437,12 +420,12 @@
     <header>
         <div class="container">
             <nav>
-                <div class="logo">Alex Chen.</div>
+                <div class="logo">Clary Sung.</div>
                 <ul class="nav-links">
                     <li><a href="#about">關於我</a></li>
                     <li><a href="#experience">工作經歷</a></li>
                     <li><a href="#projects">精選作品</a></li>
-                    <li><a href="#contact" class="btn-nav">Get in Touch</a></li>
+                    <li><a href="mailto:boyfriend6520@gmail.com" class="btn-nav">Get in Touch</a></li>
                 </ul>
             </nav>
         </div>
@@ -452,24 +435,29 @@
     <section id="about" class="hero-wrap alt-a">
         <div class="container hero">
             <div class="hero-img-wrapper">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Alex Chen" class="hero-img">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Clary Sung" class="hero-img">
                 <div class="hero-img-decor"></div>
             </div>
             <div class="hero-text">
-                <span class="greeting">👋 Hello World</span>
-                <h1>你好，我是 Alex，<br>一位相信<span class="highlight">『好產品源於同理心』</span>的<br>軟體產品經理。</h1>
-                <p>擅長在複雜的商業邏輯與細膩的用戶情感之間，搭建溫暖的橋樑。熱衷於傾聽用戶聲音、賦能跨部門團隊，打造有溫度且具備商業價值的數位體驗。</p>
+                <h1>你好，我是 Clary，<br>一位相信<span class="highlight">『設計來自於解決問題』</span>的<br>軟體產品經理。</h1>
+                <p>我希望透過同理心理解使用者真正的痛點，將規劃與想像落實在產品之中，讓每一次使用都更直覺、更舒服。即使只是微小的改變，也能為使用者帶來更好的體驗。</p>
 
                 <div class="hero-meta">
-                    <span class="meta-tag">🎓 國立臺灣大學 資訊工程碩士</span>
+                    <span class="meta-tag">🎓 國立臺北教育大學 文化創意產業經營學系</span>
                 </div>
 
                 <div class="hero-skills" id="skills">
-                    <span class="skill-pill">同理心用戶洞察</span>
-                    <span class="skill-pill">👋 Hello World</span>
-                    <span class="skill-pill">敏捷團隊賦能</span>
-                    <span class="skill-pill">數據驅動策略</span>
-                    <span class="skill-pill">跨部門溝通協調</span>
+                    <span class="skill-pill">專案溝通╱整合管理</span>
+                    <span class="skill-pill">專案時程規劃</span>
+                    <span class="skill-pill">WBS</span>
+                    <span class="skill-pill">AI 應用</span>
+                    <span class="skill-pill">介面規劃</span>
+                    <span class="skill-pill">Axure RP</span>
+                    <span class="skill-pill">Figma</span>
+                    <span class="skill-pill">Trello</span>
+                    <span class="skill-pill">Jira</span>
+                    <span class="skill-pill">Asana</span>
+                    <span class="skill-pill">Confluence</span>
                 </div>
             </div>
         </div>
@@ -481,30 +469,57 @@
             <h2 class="section-title">🌿 工作經歷 Experience</h2>
             <div class="timeline">
                 <div class="timeline-item">
-                    <div class="timeline-date">2021 - PRESENT</div>
-                    <h3>資深軟體產品經理 — Tech Corp</h3>
-                    <h4>核心 SaaS 產品線 / 帶領 15 人跨職能團隊</h4>
-                    <p>作為團隊的溝通橋樑，傾聽用戶反饋並轉化為產品路線圖。以同理心驅動設計，協調工程、設計與行銷團隊。</p>
+                    <div class="timeline-date">2026.07 - PRESENT</div>
+                    <h3>Supervisor 專案主任 — 台灣屈臣氏個人用品商店股份有限公司</h3>
+                    <h4>核心職責：集團數位轉型專案管理與內部流程優化</h4>
                     <ul>
-                        <li>主導產品重構專案，透過深度用戶訪談，將核心功能的使用率提升 40%。</li>
-                        <li>建立團隊內部的「同理心地圖」工作坊，增進研發團隊對用戶痛點的共鳴。</li>
+                        <li><strong>專案時程與風險管控：</strong>依據專案目標拆解任務，規劃專案時程與關鍵里程碑；定期檢視進度並提前辨識潛在風險，確保關鍵節點準時上線。</li>
+                        <li><strong>跨部門資源整合與溝通：</strong>串聯台灣 IT 部門、Stakeholders 與香港總公司 IT，釐清跨部門需求及相互關係，確保分工明確、決策落地並避免資訊落差。</li>
+                        <li><strong>需求釐清與開發障礙排除：</strong>透過需求訪談將模糊的商業構想轉化為可執行的系統規格與 User Story；面對技術限制或 API 串接問題時提出替代方案，避免進度延後。</li>
+                        <li><strong>內部流程自動化與 AI 創新應用：</strong>獨立規劃並導入 AI Agent 自動化週報生成工具，串接專案管理系統數據並產出結構化報告，每週減少約 1 小時行政工時，提升資訊即時性與一致性。</li>
                     </ul>
                 </div>
                 <div class="timeline-item">
-                    <div class="timeline-date">2018 - 2021</div>
-                    <h3>產品經理 / 前端開發 — Studio Design</h3>
-                    <h4>數位創新工作室 / 從 0 到 1 產品孵化</h4>
-                    <p>負責新創產品的早期驗證與開發。撰寫 PRD 並與工程師並肩作戰，營造開放、心理安全的團隊氛圍。</p>
+                    <div class="timeline-date">2021.09 - 2026.05</div>
+                    <h3>產品企劃人員 — 超級點數股份有限公司</h3>
+                    <h4>核心職責：APP 產品規劃與使用者體驗優化</h4>
                     <ul>
-                        <li>成功交付 5+ 個企業級 Web App，平均按時交付率達 95%。</li>
-                        <li>導入敏捷開發流程，將團隊的迭代週期從 4 週縮短至 2 週。</li>
+                        <li><strong>APP UI/UX 改版與體驗優化：</strong>主導超級點數 APP 全面改版，重新規劃會員登入、點數查詢至商品兌換的完整旅程，並重塑視覺介面與互動元素。</li>
+                        <li><strong>數據驅動的產品改進：</strong>透過用戶行為分析與客服回饋，找出兌換流程複雜、商品分類不清及點數餘額顯示不明等主要痛點。</li>
+                        <li><strong>產品開發與品質保證：</strong>使用 Axure、Figma 規劃產品前後台 Wireframe 並撰寫 PRD；協調設計師與工程師進行開發 Kickoff，執行前後端串接、使用者流程及邊界情境驗收，累計發現並解決上千個 Bug，建立標準化測試與 Buglist 管理機制。</li>
+                        <li><strong>專案管理與時程控管：</strong>安排 APP 上線及送審時程，確保版本按時發布；追蹤上線後的用戶回饋與數據表現，持續迭代產品功能。</li>
                     </ul>
                 </div>
                 <div class="timeline-item">
-                    <div class="timeline-date">2016 - 2018</div>
-                    <h3>產品設計實習生 — Creative Lab</h3>
-                    <h4>使用者研究與介面設計</h4>
-                    <p>參與多個 B2C App 的使用者研究，負責整理訪談筆記與繪製 User Journey Map，培養對用戶行為的敏銳洞察力。</p>
+                    <div class="timeline-date">2021.04 - 2021.09</div>
+                    <h3>專案經理 — 艾西斯資訊有限公司</h3>
+                    <h4>核心職責：產品維運與敏捷開發</h4>
+                    <ul>
+                        <li><strong>專案交付與時程管理：</strong>管理開發時程、評估工時與風險，每週與內部團隊對齊需求優先級，確保專案按時交付並降低需求變更率。</li>
+                        <li><strong>產品開發與測試：</strong>獨立完成需求訪談、Wireframe 規劃至功能驗收的完整流程，並主導 A/B Test 與易用性測試，依據數據優化產品功能。</li>
+                        <li><strong>問題解決與風險控管：</strong>處理網路維運中心回報問題，快速判斷 Bug 根源並安排修復；建立問題追蹤機制，確保問題零遺漏。</li>
+                    </ul>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2020.12 - 2021.04</div>
+                    <h3>專案管理師 — 可思科技股份有限公司</h3>
+                    <h4>核心職責：客戶專案交付與團隊協作</h4>
+                    <ul>
+                        <li><strong>客戶需求管理與專案交付：</strong>負責 7 個以上客戶專案的全程管理，從需求確認、Wireframe 規劃至驗收交付，客戶滿意度達 90% 以上。</li>
+                        <li><strong>團隊協調與進度控管：</strong>協調內部與跨團隊人力分配，確保每日及每週開發進度；提供全站 Wireframe 與規劃說明，協助客戶理解專案方向並縮短決策時間。</li>
+                        <li><strong>品質控管與業務支持：</strong>執行系統測試並累計解決上百個 Bug；評估新增功能費用、撰寫報價單，協助業務推廣專案維護方案。</li>
+                    </ul>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2019.04 - 2020.10</div>
+                    <h3>產品專員 — 恆星網路科技有限公司</h3>
+                    <h4>核心職責：產品開發與營運管理</h4>
+                    <ul>
+                        <li><strong>端到端產品開發：</strong>獨立負責產品功能開發，從市場競品分析、需求訪談至工程師派工與驗收，並評估 UX、技術架構及跨平台整合的影響與風險。</li>
+                        <li><strong>產品營運與跨部門協作：</strong>協調營運、QA 與技術部門安排網站及 APP 更新；與行銷及主播經紀公司同步需求，依賽事熱度預備流量負載，支援 10 萬以上同時在線用戶。</li>
+                        <li><strong>跨公司合作與品質管理：</strong>每日追蹤第三方監控團隊提出的產品 Bug 並進行複驗判斷；提供功能開發文件與技術指導，降低營運操作錯誤。</li>
+                        <li><strong>數據驅動決策：</strong>每週分析網站與 APP 上線數據，產出報告支援決策並提升產品迭代速度。</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -561,7 +576,7 @@
     <!-- 專業證書（底色：燕麥白） -->
     <section id="certificates" class="section alt-b">
         <div class="container">
-            <h2 class="section-title">📜 專業證書 (Certificates)</h2>
+            <h2 class="section-title">📜 專業證書 Certificates</h2>
             <div class="cert-grid">
                 <a class="cert-card" href="https://coursera.org/share/dd7eff3d940b3b27bc196669fe174423" target="_blank" rel="noopener noreferrer">
                     <div class="cert-icon">📘</div>
@@ -596,15 +611,15 @@
         <div class="container">
             <h2>期待與您相遇</h2>
             <p>如果您也相信好產品能為世界帶來一點溫暖，<br>歡迎隨時透過 Email 聯繫我，一起聊聊未來的可能性。</p>
-            <a href="mailto:hello@example.com" class="btn-white">發送 Email 給我 ✉️</a>
+            <a href="mailto:boyfriend6520@gmail.com" class="btn-white">發送 Email 給我 ✉️</a>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            © 2026 Alex Chen. Crafted with empathy & code. All rights reserved.
+            © 2026 Clary Sung. Crafted with empathy &amp; code. All rights reserved.
         </div>
     </footer>
 
-</body>
-</html>
+
+</body></html>
